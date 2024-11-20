@@ -25,7 +25,14 @@ namespace BLL.Services
             var e = _db.Roles.SingleOrDefault(r => r.Id == id);
             if (e == null)
                 Error("Role to be deleted can not be found!");
-            //manytomany with blogs control
+            var usersWithRole = _db.Users.Where(u => u.RoleId == id).ToList();
+            foreach (var user in usersWithRole)
+            {
+                user.RoleId = null; 
+            }
+
+            _db.SaveChanges();
+
             _db.Roles.Remove(e);
             _db.SaveChanges();
             return Success("Role is deleted.");
