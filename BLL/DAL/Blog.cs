@@ -18,7 +18,7 @@ namespace BLL.DAL
         [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5.")]
         public decimal? Rating {  get; set; }
         
-        public DateTime PublishDate { get; set; }
+        public DateTime? PublishDate { get; set; }
 
         public int UserId { get; set; }
 

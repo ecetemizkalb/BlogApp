@@ -41,17 +41,17 @@
 			</div>
         </div>
         <div class="row mb-3">
+            <label asp-for="PublishDate" class="col-2 col-form-label fw-bold"></label>
+            <div class="col-10">
+                <input asp-for="Record.PublishDate" class="form-control @dateTimePickerClass" type="text" />
+                <span asp-validation-for="Record.PublishDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row mb-3">
             <label asp-for="Rating" class="col-2 col-form-label fw-bold"></label>
 			<div class="col-10">
 			    <input asp-for="Record.Rating" class="form-control" />
 				<span asp-validation-for="Record.Rating" class="text-danger"></span>
-			</div>
-        </div>
-        <div class="row mb-3">
-            <label asp-for="PublishDate" class="col-2 col-form-label fw-bold"></label>
-			<div class="col-10">
-				<input asp-for="Record.PublishDate" class="form-control @dateTimePickerClass" type="text" />
-				<span asp-validation-for="Record.PublishDate" class="text-danger"></span>
 			</div>
         </div>
         <div class="row mb-3">
@@ -65,15 +65,13 @@
         </div>
 
 @* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. *@
-        @*
         <div class="row mb-3">
-            <label asp-for="ManyToManyRecordIds" class="col-2 col-form-label fw-bold"></label>
-	        <div class="col-10">
-		        <select multiple asp-for="ManyToManyRecordIds" class="form-select" asp-items="ViewBag.ManyToManyRecordIds"></select>
-		        <span asp-validation-for="ManyToManyRecordIds" class="text-danger"></span>
-	        </div>
+            <label asp-for="TagIds" class="col-2 col-form-label fw-bold"></label>
+            <div class="col-10">
+                <select multiple asp-for="TagIds" class="form-select" asp-items="ViewBag.TagIds"></select>
+                <span asp-validation-for="TagIds" class="text-danger"></span>
+            </div>
         </div>
-        *@
 
         <hr />  
         <div class="row mb-3">

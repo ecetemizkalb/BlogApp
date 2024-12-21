@@ -25,9 +25,9 @@ namespace BLL.Services
         {
             var e = _db.Users.Include(u => u.Blogs).SingleOrDefault(u => u.Id == id);
             if (e == null)
-                Error("User to be deleted can not be found!");
+                return Error("User to be deleted can not be found!");
             if (e.Blogs.Any())
-                Error("This user to be deleted has relational blogs.");
+                return Error("This user to be deleted has relational blogs.");
             _db.Users.Remove(e);
             _db.SaveChanges();
             return Success("User is deleted.");
@@ -44,7 +44,7 @@ namespace BLL.Services
                 return Error("User with the same name exists!");
             var e = _db.Users.SingleOrDefault(u => u.Id == entity.Id);
             if (e == null)
-                Error("Tag to be updated can noube found!");
+                return Error("Tag to be updated can noube found!");
             e.UserName = entity.UserName?.Trim();
             e.Password = entity.Password?.Trim();
             e.UserName = entity.UserName?.Trim();

@@ -53,7 +53,7 @@ namespace BLL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("Blogs", (string)null);
                 });
 
             modelBuilder.Entity("BLL.DAL.BlogTag", b =>
@@ -76,7 +76,7 @@ namespace BLL.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("BlogTags");
+                    b.ToTable("BlogTags", (string)null);
                 });
 
             modelBuilder.Entity("BLL.DAL.Role", b =>
@@ -92,7 +92,7 @@ namespace BLL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("BLL.DAL.Tag", b =>
@@ -109,7 +109,7 @@ namespace BLL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("BLL.DAL.User", b =>
@@ -138,7 +138,7 @@ namespace BLL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("BLL.DAL.Blog", b =>

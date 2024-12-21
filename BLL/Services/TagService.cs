@@ -1,6 +1,7 @@
 ﻿using BLL.DAL;
 using BLL.Models;
 using BLL.Services.Bases;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services
 {
@@ -22,23 +23,23 @@ namespace BLL.Services
 
         public Service Delete(int id)
         {
-            var e = _db.Tags.SingleOrDefault(t => t.Id == id);
+            var e = _db.Tags.Include(b => b.BlogTags).SingleOrDefault(t => t.Id == id);
             if (e == null)
-                Error("Tag to be deleted can not be found!");
-            //manytomany with blogs control
+                return Error("Tag to be deleted can not be found!");
+            _db.BlogTags.RemoveRange(e.BlogTags);
             _db.Tags.Remove(e);
             _db.SaveChanges();
             return Success("Tag is deleted.");
-
         }
 
         public Service Update(Tag entity)
         {
             if (_db.Tags.Any(t => t.Id != entity.Id && t.Name.ToUpper() == entity.Name.ToUpper().Trim()))
                 return Error("Tag with the same name exists!");
-            var e = _db.Tags.SingleOrDefault(t => t.Id == entity.Id);
+            var e = _db.Tags.Include(b => b.BlogTags).SingleOrDefault(t => t.Id == entity.Id);
             if (e == null)
-                Error("Tag to be updated can not be found!");
+                return Error("Tag to be updated can not be found!");
+            _db.BlogTags.RemoveRange(e.BlogTags);
             e.Name = entity.Name?.Trim();
             _db.Tags.Update(e);
             _db.SaveChanges();
@@ -47,7 +48,10 @@ namespace BLL.Services
 
         IQueryable<TagModel> IService<Tag, TagModel>.Query()
         {
-            return _db.Tags.OrderBy(t => t.Name).Select(t => new TagModel() { Record = t });
+            return _db.Tags
+                    .Include(t => t.BlogTags).ThenInclude(bt => bt.Blog)
+                    .OrderBy(t => t.Name)
+                    .Select(t => new TagModel { Record = t });
         }
     }
 }

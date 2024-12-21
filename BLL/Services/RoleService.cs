@@ -1,6 +1,7 @@
 ﻿using BLL.DAL;
 using BLL.Models;
 using BLL.Services.Bases;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services
 {
@@ -22,17 +23,11 @@ namespace BLL.Services
 
         public Service Delete(int id)
         {
-            var e = _db.Roles.SingleOrDefault(r => r.Id == id);
+            var e = _db.Roles.Include(r => r.Users).SingleOrDefault(r => r.Id == id);
             if (e == null)
-                Error("Role to be deleted can not be found!");
-            var usersWithRole = _db.Users.Where(u => u.RoleId == id).ToList();
-            foreach (var user in usersWithRole)
-            {
-                user.RoleId = null; 
-            }
-
-            _db.SaveChanges();
-
+                return Error("Role to be deleted can not be found!");
+            if (e.Users.Any())
+                return Error("This role to be deleted has relational users.");
             _db.Roles.Remove(e);
             _db.SaveChanges();
             return Success("Role is deleted.");

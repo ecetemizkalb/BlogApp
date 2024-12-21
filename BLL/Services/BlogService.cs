@@ -1,6 +1,7 @@
 ﻿using BLL.DAL;
 using BLL.Models;
 using BLL.Services.Bases;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services
 {
@@ -12,47 +13,75 @@ namespace BLL.Services
 
         public Service Create(Blog entity)
         {
+            if (entity == null)
+                return Error("Blog entity cannot be null.");
+
+            if (string.IsNullOrWhiteSpace(entity.Title))
+                return Error("Blog title cannot be empty.");
+
+            if (_db.Blogs.Any(b => b.Title.ToLower() == entity.Title.ToLower().Trim()))
+                return Error("Blog with the same title exists!");
+
             entity.Title = entity.Title?.Trim();
             entity.Content = entity.Content?.Trim();
-            entity.PublishDate = DateTime.Now;
+            entity.PublishDate = entity.PublishDate ?? DateTime.Now;
             _db.Blogs.Add(entity);
             _db.SaveChanges();
-            return Success(entity.Title + " is created succesfully.");
+            return Success(entity.Title + " is created successfully.");
         }
 
         public Service Delete(int id)
         {
-            var e = _db.Blogs.SingleOrDefault(b => b.Id == id);
-            if (e == null)
-                Error("Blog to be deleted can not be found!");
-            //control manytomany relationships with tag
-            _db.Blogs.Remove(e);
+            var entity = _db.Blogs.Include(b => b.BlogTags).SingleOrDefault(b => b.Id == id);
+            if (entity is null)
+                return Error("Blog can't be found!");
+
+            if (entity.BlogTags != null)
+                _db.BlogTags.RemoveRange(entity.BlogTags);
+            _db.Blogs.Remove(entity);
             _db.SaveChanges();
-            return Success("Blog is deleted.");
+            return Success("Blog deleted successfully.");
         }
 
         public IQueryable<BlogModel> Query()
         {
-            return _db.Blogs.OrderBy(b => b.Title).Select(b => new BlogModel() { Record = b });
+            return _db.Blogs
+                    .Include(b => b.User)
+                    .Include(b => b.BlogTags).ThenInclude(bt => bt.Tag)
+                    .OrderByDescending(b => b.PublishDate)
+                    .ThenByDescending(b => b.Rating)
+                    .ThenBy(b => b.Title)
+                    .Select(b => new BlogModel { Record = b });
         }
 
-        public Service Update(Blog entity)
+        public Service Update(Blog record)
         {
-            // Fetch the existing blog from the database
-            var e = _db.Blogs.SingleOrDefault(b => b.Id == entity.Id);
-            if (e == null)
-                return Error("Blog to be updated cannot be found!");
+            if (record == null)
+                return Error("Blog record cannot be null.");
 
-            e.Title = entity.Title?.Trim();
-            e.Content = entity.Content?.Trim();
-            e.Rating = entity.Rating;
+            if (string.IsNullOrWhiteSpace(record.Title))
+                return Error("Blog title cannot be empty.");
 
-            // Manytomany changes
-            //_db.Blogs.Update(e);
+            if (_db.Blogs.Any(b => b.Id != record.Id && b.Title.ToLower() == record.Title.ToLower().Trim()))
+                return Error("Another blog with the same title exists!");
 
-            // Save changes to the database
+            var entity = _db.Blogs.Include(b => b.BlogTags).SingleOrDefault(b => b.Id == record.Id);
+            if (entity is null)
+                return Error("Blog not found!");
+
+            if (entity.BlogTags != null)
+                _db.BlogTags.RemoveRange(entity.BlogTags);
+            entity.Title = record.Title?.Trim();
+            entity.Content = record.Content?.Trim();
+            entity.Rating = record.Rating;
+            entity.PublishDate = DateTime.Now;
+            entity.UserId = record.UserId;
+            entity.BlogTags = record.BlogTags ?? new List<BlogTag>();
+            _db.Blogs.Update(entity);
             _db.SaveChanges();
+
             return Success("Blog has been updated successfully.");
         }
     }
 }
+
