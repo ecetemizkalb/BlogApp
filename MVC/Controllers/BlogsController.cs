@@ -6,6 +6,7 @@ using BLL.Services;
 using BLL.Models;
 using BLL.DAL;
 using BLL.Services.Bases;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVC.Controllers
 {
@@ -26,6 +27,7 @@ namespace MVC.Controllers
             _tagService = tagService;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var list = _blogService.Query().ToList();
@@ -44,6 +46,7 @@ namespace MVC.Controllers
             ViewBag.TagIds = new MultiSelectList(_tagService.Query().ToList(), "Record.Id", "Name");
         }
 
+        [Authorize(Roles = "Admin, Creator")]
         public IActionResult Create()
         {
             SetViewData();
@@ -52,6 +55,7 @@ namespace MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Creator")]
         public IActionResult Create(BlogModel blog)
         {
             if (ModelState.IsValid)
@@ -68,6 +72,7 @@ namespace MVC.Controllers
             return View(blog);
         }
 
+        [Authorize(Roles = "Admin, Creator")]
         public IActionResult Edit(int id)
         {
             var item = _blogService.Query().SingleOrDefault(q => q.Record.Id == id);
@@ -77,6 +82,7 @@ namespace MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Creator")]
         public IActionResult Edit(BlogModel blog)
         {
             if (ModelState.IsValid)
@@ -93,6 +99,7 @@ namespace MVC.Controllers
             return View(blog);
         }
 
+        [Authorize(Roles = "Admin, Creator")]
         public IActionResult Delete(int id)
         {
             var item = _blogService.Query().SingleOrDefault(q => q.Record.Id == id);
@@ -101,6 +108,7 @@ namespace MVC.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Creator")]
         public IActionResult DeleteConfirmed(int id)
         {
             var result = _blogService.Delete(id);

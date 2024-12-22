@@ -20,7 +20,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 //IoC Container
-var connectionString = "server=(localdb)\\mssqllocaldb;database=BlogAppDb;trusted_connection=true;";
+var connectionString = builder.Configuration.GetConnectionString("Db");
 builder.Services.AddDbContext<Db>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IService<User, UserModel>, UserService>();
 builder.Services.AddScoped<IService<Blog, BlogModel>, BlogService>();
@@ -38,10 +38,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+var section = builder.Configuration.GetSection(nameof(AppSettings));
+section.Bind(new AppSettings());
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

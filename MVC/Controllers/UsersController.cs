@@ -93,7 +93,7 @@ namespace MVC.Controllers
                     var principal = new ClaimsPrincipal(identity);
                     await HttpContext.SignInAsync(principal, new AuthenticationProperties()
                     {
-                        IsPersistent = true
+                        IsPersistent = true  //cookie will be stored even if the browser is closed
                     });
                     return RedirectToAction("Index", "Home");
                 }

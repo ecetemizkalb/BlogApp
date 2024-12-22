@@ -47,7 +47,6 @@ namespace BLL.Services
                 return Error("Tag to be updated can noube found!");
             e.UserName = entity.UserName?.Trim();
             e.Password = entity.Password?.Trim();
-            e.UserName = entity.UserName?.Trim();
             e.IsActive = entity.IsActive;
             e.RoleId = entity.RoleId;
             
