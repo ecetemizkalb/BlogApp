@@ -22,14 +22,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)  // checks if the authentication cookie exists
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Blogs" asp-action="Index">Blogs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        
                         @if (User.Identity.IsAuthenticated) // checks if the authentication cookie exists
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Favorites" asp-action="Get">Favorites</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tags" asp-action="Index">Tags</a>
+                            </li>
+
                             @if (User.IsInRole("Admin")) // checks if the authentication cookie exists and user is in role Admin
                             {
                                 <li class="nav-item">
@@ -40,13 +48,8 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
                                 </li>
                             }
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Tags" asp-action="Index">Tags</a>
-                            </li>
+                           
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Blogs" asp-action="Index">Blogs</a>
-                        </li>
                     </ul>
 
                     <!-- User: -->

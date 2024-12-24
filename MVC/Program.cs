@@ -27,6 +27,14 @@ builder.Services.AddScoped<IService<Blog, BlogModel>, BlogService>();
 builder.Services.AddScoped<IService<Role, RoleModel>, RoleService>();
 builder.Services.AddScoped<IService<Tag, TagModel>, TagService>();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<HttpServiceBase, HttpService>();
+
+// Session:
+builder.Services.AddSession(config =>
+{
+    config.IdleTimeout = TimeSpan.FromMinutes(60); // default: 20 minutes
+});
 
 var app = builder.Build();
 
@@ -49,6 +57,9 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+// Session:
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
