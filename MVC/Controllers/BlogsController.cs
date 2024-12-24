@@ -42,7 +42,9 @@ namespace MVC.Controllers
 
         protected void SetViewData()
         {
-            ViewData["UserId"] = new SelectList(_userService.Query().ToList(), "Record.Id", "UserName");
+            ViewData["UserId"] = new SelectList(_userService.Query()
+            .Where(u => u.Record.Role.Name == "Admin" || u.Record.Role.Name == "Creator")
+            .ToList(), "Record.Id", "UserName");
             ViewBag.TagIds = new MultiSelectList(_tagService.Query().ToList(), "Record.Id", "Name");
         }
 
