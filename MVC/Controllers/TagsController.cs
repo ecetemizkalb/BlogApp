@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MVC.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Creator")]
     public class TagsController : MvcController
     {
         // Service injections:

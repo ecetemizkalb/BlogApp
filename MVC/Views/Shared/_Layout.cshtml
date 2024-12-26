@@ -34,9 +34,14 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Favorites" asp-action="Get">Favorites</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Tags" asp-action="Index">Tags</a>
-                            </li>
+
+                            @if (!User.IsInRole("Viewer"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Tags" asp-action="Index">Tags</a>
+                                </li>
+                            }
+                            
                             @if (User.IsInRole("Admin")) // checks if the authentication cookie exists and user is in role Admin
                             {
                                 <li class="nav-item">
