@@ -6,11 +6,13 @@ using BLL.Services;
 using BLL.Models;
 using BLL.DAL;
 using BLL.Services.Bases;
+using Microsoft.AspNetCore.Authorization;
 
 // Generated from Custom Template.
 
 namespace MVC.Controllers
 {
+    [Authorize]
     public class TagsController : MvcController
     {
         // Service injections:

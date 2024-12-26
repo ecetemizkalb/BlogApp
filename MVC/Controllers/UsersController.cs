@@ -8,11 +8,13 @@ using BLL.Services.Bases;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 // Generated from Custom Template.
 
 namespace MVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController : MvcController
     {
         // Service injections:
@@ -68,13 +70,14 @@ namespace MVC.Controllers
             SetViewData();
             return View();
         }
-
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(UserModel user)
         {
             if (ModelState.IsValid)
@@ -101,6 +104,7 @@ namespace MVC.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
